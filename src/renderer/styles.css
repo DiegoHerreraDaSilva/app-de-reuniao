@@ -1,0 +1,130 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Design system Schwaben Engineering: tokens, card com contorno aceso, pílula de marca. */
+:root {
+  --brand-600: #128293;
+
+  --bg: #eef1f4;
+  --bg-glow-a: rgba(31, 161, 174, 0.16);
+  --bg-glow-b: rgba(79, 143, 230, 0.12);
+  --surface: #ffffff;
+  --surface-2: #f4f7f9;
+  --surface-grad: #eaf1f3;
+  --border: #dde3e8;
+  --hairline: rgba(255, 255, 255, 0.9);
+  --text: #141a20;
+  --text-muted: #56626d;
+
+  --brand: #0f8f9c;
+  --accent: #0f8f9c;
+  --accent-hi: #35c3ce;
+  --accent-glow: rgba(15, 143, 156, 0.3);
+  --ring: rgba(31, 161, 174, 0.35);
+
+  --ok: #0f9d63;  --warn: #b5730a;  --bad: #cc3b33;
+
+  --shadow-card: 0 1px 2px rgba(20,26,32,.05), 0 12px 28px -22px rgba(20,26,32,.45);
+  --shadow-card-hover: 0 2px 4px rgba(20,26,32,.07), 0 20px 40px -24px rgba(15,143,156,.45);
+}
+
+.dark {
+  --bg: #020617;
+  --bg-glow-a: rgba(15, 168, 164, 0.14);
+  --bg-glow-b: rgba(100, 120, 238, 0.1);
+  --surface: #1c2127;
+  --surface-2: #232a31;
+  --surface-grad: #171c22;
+  --border: #2e373f;
+  --hairline: rgba(255, 255, 255, 0.06);
+  --text: #eef2f4;
+  --text-muted: #9aa6b0;
+
+  --brand: #3bbdc9;
+  --accent: #0fa8a4;
+  --accent-hi: #4fe3dc;
+  --accent-glow: rgba(79, 227, 220, 0.35);
+  --ring: rgba(59, 189, 201, 0.45);
+
+  --ok: #3ddc97;  --warn: #ffc247;  --bad: #ff6b6b;
+
+  --shadow-card: 0 1px 0 rgba(0,0,0,.4), 0 14px 32px -22px rgba(0,0,0,.9);
+  --shadow-card-hover: 0 1px 0 rgba(0,0,0,.4), 0 22px 44px -22px rgba(79,227,220,.35);
+}
+
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+* { border-color: var(--border); }
+.muted { color: var(--text-muted); }
+
+body::before {
+  content: "";
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(60rem 32rem at 12% -6%, var(--bg-glow-a), transparent 70%),
+    radial-gradient(48rem 28rem at 92% 4%, var(--bg-glow-b), transparent 72%);
+}
+
+.toast-mode, .toast-mode body { background: transparent; overflow: hidden; }
+.toast-mode body::before { display: none; }
+
+.card {
+  position: relative;
+  background: linear-gradient(163deg, var(--surface) 0%, var(--surface-grad) 140%);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: inset 0 1px 0 0 var(--hairline), var(--shadow-card);
+  transition: box-shadow .22s ease, border-color .22s ease;
+}
+.card::after {
+  content: "";
+  position: absolute; left: 16px; right: 16px; bottom: -1px;
+  height: 2px; border-radius: 2px; pointer-events: none;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--card-accent, var(--accent)) 18%,
+    var(--card-accent-hi, var(--accent-hi)) 50%,
+    var(--card-accent, var(--accent)) 82%,
+    transparent 100%);
+  box-shadow: 0 0 12px 0 var(--card-glow, var(--accent-glow));
+  opacity: .8;
+  transition: opacity .22s ease, box-shadow .22s ease, left .22s ease, right .22s ease;
+}
+.card:hover {
+  border-color: color-mix(in srgb, var(--card-accent, var(--accent)) 45%, var(--border));
+  box-shadow: inset 0 1px 0 0 var(--hairline), var(--shadow-card-hover);
+}
+.card:hover::after {
+  opacity: 1; left: 10px; right: 10px;
+  box-shadow: 0 0 20px 1px var(--card-glow, var(--accent-glow));
+}
+@media (prefers-reduced-motion: reduce) {
+  .card, .card::after { transition: none; }
+}
+
+.num-hero {
+  background: linear-gradient(177deg, var(--text) 0%,
+    color-mix(in srgb, var(--card-accent, var(--accent)) 60%, var(--text)) 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 0 14px var(--card-glow, var(--accent-glow)));
+}
+
+.pill-accent {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--brand-600) 100%);
+  color: #fff;
+  box-shadow: 0 0 14px -2px var(--accent-glow);
+}
+
+.bar-track { background: var(--surface-2); box-shadow: inset 0 1px 2px rgba(0,0,0,.18); }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--accent) 50%, var(--border)); }
