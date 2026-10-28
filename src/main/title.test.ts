@@ -8,7 +8,10 @@ describe('splitTitle', () => {
     expect(splitTitle('TITULO: Renovação de licenças\n\n# Ata\n- x')).toEqual({ title: 'Renovação de licenças', ata: '# Ata\n- x' })
   })
   it('limita a 4 palavras e limpa enfeites', () => {
-    expect(splitTitle('TÍTULO: **"Planejamento do orçamento de TI de 2027."**\n\n# Ata').title).toBe('Planejamento do orçamento de')
+    expect(splitTitle('TÍTULO: **"Planejamento do orçamento de TI de 2027."**\n\n# Ata').title).toBe('Planejamento do orçamento')
+  })
+  it('não deixa o título terminar no meio da frase', () => {
+    expect(splitTitle('TITULO: Demonstração de transcrição ao vivo\n\n# Ata').title).toBe('Demonstração de transcrição')
   })
   it('sem a linha de título devolve só a ata', () => {
     expect(splitTitle('# Ata\ntexto')).toEqual({ title: null, ata: '# Ata\ntexto' })

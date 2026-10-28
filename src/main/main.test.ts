@@ -59,6 +59,14 @@ describe('Slicer', () => {
     for (let i = 0; i < 30; i++) s.push(new Float32Array(RATE).fill(0.5))
     expect(slices).toEqual([30 * RATE])
   })
+  it('limite menor aceita voz baixa (áudio do PC)', () => {
+    const quietVoice = new Float32Array(RATE).fill(0.005) // RMS 0,005: abaixo do limite do mic, acima do do PC
+    const mic: number[] = [], pc: number[] = []
+    const a = new Slicer('mic', p => mic.push(p.length)), b = new Slicer('pc', p => pc.push(p.length), 0.002)
+    for (let i = 0; i < 30; i++) { a.push(quietVoice); b.push(quietVoice) }
+    expect(mic).toEqual([])
+    expect(pc).toEqual([30 * RATE])
+  })
   it('descarta fatia só de silêncio', () => {
     const slices: number[] = []
     const s = new Slicer('mic', p => slices.push(p.length))

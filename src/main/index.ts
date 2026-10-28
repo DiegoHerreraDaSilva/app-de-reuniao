@@ -46,7 +46,7 @@ function startMeeting(title: string, platform: string, typed = false) {
       } catch (e) { say(`Erro na transcrição: ${(e as Error).message}`, 'error') }
     })
   }
-  current = { dir, slicers: { mic: new Slicer('mic', onSlice), pc: new Slicer('pc', onSlice) } }
+  current = { dir, slicers: { mic: new Slicer('mic', onSlice), pc: new Slicer('pc', onSlice, 0.002) } }
   ui('capture', { on: true, title })
   say(`Gravando: ${title}`)
 }

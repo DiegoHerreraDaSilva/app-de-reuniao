@@ -8,14 +8,16 @@ export class Slicer {
   private len = 0
   private quiet = 0
   private voiced = false
-  constructor(private source: Source, private onSlice: (pcm: Float32Array, source: Source) => void) {}
+  // thr: RMS abaixo do qual o quadro é silêncio. O microfone tem ruído de fundo (0,01); o áudio do PC
+  // é silêncio digital (0) entre falas, então um limite baixo não perde voz baixa dos outros participantes.
+  constructor(private source: Source, private onSlice: (pcm: Float32Array, source: Source) => void, private thr = THR) {}
 
   push(frame: Float32Array) {
     let sum = 0
     for (const v of frame) sum += v * v
     const rms = Math.sqrt(sum / (frame.length || 1))
-    this.quiet = rms < THR ? this.quiet + frame.length : 0
-    if (rms >= THR) this.voiced = true
+    this.quiet = rms < this.thr ? this.quiet + frame.length : 0
+    if (rms >= this.thr) this.voiced = true
     this.buf.push(frame); this.len += frame.length
     if (this.len >= MAX || (this.len >= MIN && this.quiet >= SIL)) this.flush()
   }
